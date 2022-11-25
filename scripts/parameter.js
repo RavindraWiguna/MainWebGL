@@ -29,3 +29,7 @@ const COLOR_BRIDGE_2 = [0.972, 0.960, 0.915];
 // Body parameters
 const HEIGHT_BODY = 4;
 const CY_BOTTOM_BODY = CY_BRIDGE-HEIGHT_BODY;
+// Bridge parameters
+const HEIGHT_BRIDGE_2 = HEIGHT_BRIDGE/2;
+// Bottom ring parameters
+const CY_BOTTOM_RING = CY_BOTTOM_BODY - HEIGHT_BRIDGE_2;
