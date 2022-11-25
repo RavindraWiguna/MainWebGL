@@ -6,16 +6,18 @@ function main(){
     let side = 36;
     let radius = 1;
     let height = 0.25;
-    let mesh = generateTubeLike(side, height, [radius, radius+0.1], [0.0, 0.0, 0.0], 0);
+    // let mesh = generateTubeLike(side, height, [radius, radius+0.1], [0.0, 0.0, 0.0], 0);
+    let mesh = generateHollowCircle(36, [0.75,1.5], [0.0, 0.0, 0.0], 0);
     // let mesh2 = generateTubeLike(10, 1, 0.25, [0.0, 1.0, 0.0], mesh[2]);
     let vertices = mesh[0];
     let indices = mesh[1];
-    console.log(vertices.length);
+    console.log(vertices);
+    console.log(indices);
     // vertices = vertices.concat(mesh2[0]);
     // indices = indices.concat(mesh2[1]);
-    console.log(vertices);
+    // console.log(vertices);
     // console.log(mesh2[0].length)
-    debug(indices.length);
+    // debug(indices.length);
     // getTriangleProperty([0,0],[3,4]);
     let colors = generateCircleColor(side, [0.25,0.25,0.75]);
     colors = colors.concat(generateCircleColor(side, [0.5,0,0.5]));
@@ -77,7 +79,7 @@ function main(){
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LEQUAL);
 
-        gl.clearColor(0.1, 0.1, 0.1, 1.0);
+        gl.clearColor(1, 1, 1, 1.0);
         gl.clearDepth(1.0);
 
         gl.viewport(0.0, 0.0, canvas.width, canvas.height);

@@ -1,8 +1,20 @@
 /*
 ================================== GEOMETRY & COLOR HELPER ======================
 */
+const VERTEX = 0;
+const INDICES = 1;
+const OFFSET = 2;
 
-function generateCircle(side, radius, center){
+// Generate vertices and indices of an approximate-circle
+// return vertex, indice, offset
+function generateCircle(side, radius, center, offset){
+    let vertices = generateCircleVertices(side, radius, center);
+    let indices = generateCircleIndices(side, offset);
+    let newOffset = offset+side+1;
+    return [vertices, indices, newOffset];
+}
+// Generate vertices of a circle by approximating it into N-side polygon
+function generateCircleVertices(side, radius, center){
     let cx = center[0];
     let cy = center[1];
     let cz = center[2];
@@ -13,17 +25,16 @@ function generateCircle(side, radius, center){
     }
 
     let increment = 2*Math.PI/side;
-    let result = [cx, cy, cz];
+    let vertices = [cx, cy, cz];
     for(let i=0;i<side;i++){
         let theta = increment*i;
         let x = radius*Math.cos(theta) + cx;
         let z = -radius*Math.sin(theta) + cz;
-        result.push(x,cy,z);
+        vertices.push(x,cy,z);
     }
-    // debug(String(result.length)+' with side:'+String(fixside));
-    return result;
+    return vertices;
 }
-
+// Generate array of rgb color for each vertices of a circle
 function generateCircleColor(side, color){
     if(side < 3){
         alert("side can not be < 3");
@@ -39,7 +50,7 @@ function generateCircleColor(side, color){
     }
     return colors;
 }
-
+// Generate Indices of a circle (N-polygon)
 function generateCircleIndices(side, offset){
     if(side < 3){
         alert("side can not be < 3");
@@ -51,8 +62,15 @@ function generateCircleIndices(side, offset){
     }
     return indices;
 }
-
-function generateHollowCircle(side, radius, center){
+// Generate vertices and indices of a hollow circle
+function generateHollowCircle(side, radius, center, offset){
+    let vertices = generateHollowCircleVertices(side, radius, center);
+    let indices = generateHollowCircleIndices(side, offset);
+    let newOffset = offset+3*side;
+    return [vertices, indices, newOffset];
+}
+// Generate vertices of a hollow circle by using trapezoid in between 2 circle
+function generateHollowCircleVertices(side, radius, center){
     if(side < 3){
         alert("side can not be < 3");
         return; 
@@ -61,7 +79,7 @@ function generateHollowCircle(side, radius, center){
     let innerR = radius[0], outerR=radius[1];
 
     let increment = 2*Math.PI/side;
-    let result = [];
+    let vertices = [];
     for(let i=0;i<side;i++){
         let theta = increment*i;
         let cos = Math.cos(theta);
@@ -75,15 +93,17 @@ function generateHollowCircle(side, radius, center){
         let futureOuterZ = -outerR*Math.sin(theta+increment) + cz;
         
         let midPoint = getMiddlePoint([outerX, outerZ], [futureOuterX, futureOuterZ]);
-        result.push(innerX, cy, innerZ);
-        result.push(outerX, cy, outerZ);
-        result.push(midPoint[0], cy, midPoint[1]);
+        vertices.push(innerX, cy, innerZ);
+        vertices.push(outerX, cy, outerZ);
+        vertices.push(midPoint[0], cy, midPoint[1]);
     }
-    return result;
-
+    return vertices;
 }
-
+// Generate indices of a hollow circle
 function generateHollowCircleIndices(side, offset){
+    console.log('got');
+    console.log(side);
+    console.log(offset);
     if(side < 3){
         alert("side can not be < 3");
         return; 
@@ -100,6 +120,8 @@ function generateHollowCircleIndices(side, offset){
     indices.push(start+offset, start+1+offset, start+2+offset);
     indices.push(start+offset, start+2+offset, 0+offset);
     indices.push(start+2+offset, 0+offset, 1+offset);
+    console.log("done");
+    console.log(indices);
     return indices;
 }
 
@@ -107,23 +129,22 @@ function generateHollowCircleIndices(side, offset){
 
 function generateTubeLike(side, height, radius, center, offset){
     let rtop = radius[0], rbottom=radius[1];
-    // vertex circle on the top
-    let vertex = generateCircle(side, rtop, center);
-    // vertex circle on the bottom
-    let bottom = generateCircle(side, rbottom,   [center[0], center[1]-height, center[2]]);
+    let vertices = [];
+    let indices = [];
 
+    // geometry circle on the top
+    let geometryTop = generateCircle(side, rtop, center, offset);
+    // geometry circle on the bottom
+    let geometryBottom = generateCircle(side, rbottom, [center[0], center[1]-height, center[2]], geometryTop[OFFSET]);
     // combine vertex
-    vertex = vertex.concat(bottom);
-
-    // indices of circle on top
-    let indices = generateCircleIndices(side, offset);
-    let indicesBottom = generateCircleIndices(side, side+1+offset);
+    vertices = vertices.concat(geometryTop[VERTEX], geometryBottom[VERTEX]);
+    
+    // tube-body offset is start the same with offset of the top circle
     let tubeIndices = generateTubeLikeBodyIndices(side, offset);
     // merge indices
-    indices = indices.concat(indicesBottom);
-    indices = indices.concat(tubeIndices);
-    let newOffset = side+1+offset+side+1;
-    return [vertex, indices, newOffset];
+    indices = indices.concat(geometryTop[INDICES], geometryBottom[INDICES], tubeIndices);
+    let newOffset = geometryBottom[OFFSET];
+    return [vertices, indices, newOffset];
 }
 
 function generateTubeLikeBodyIndices(side, offset){
