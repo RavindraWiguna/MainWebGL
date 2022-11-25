@@ -7,23 +7,20 @@ function main(){
     let radius = 1;
     let height = 0.25;
     // let mesh = generateTubeLike(side, height, [radius, radius+0.1], [0.0, 0.0, 0.0], 0);
-    let mesh = generateHollowCircle(36, [0.75,1.5], [0.0, 0.0, 0.0], 0);
+    let mesh = generateHollowCircle(side, [0.75,1.5], [0.0, 0.0, 0.0], 0);
     // let mesh2 = generateTubeLike(10, 1, 0.25, [0.0, 1.0, 0.0], mesh[2]);
     let vertices = mesh[0];
     let indices = mesh[1];
-    console.log(vertices);
-    console.log(indices);
+    // console.log(vertices);
+    // console.log(indices);
     // vertices = vertices.concat(mesh2[0]);
     // indices = indices.concat(mesh2[1]);
     // console.log(vertices);
     // console.log(mesh2[0].length)
     // debug(indices.length);
     // getTriangleProperty([0,0],[3,4]);
-    let colors = generateCircleColor(side, [0.25,0.25,0.75]);
-    colors = colors.concat(generateCircleColor(side, [0.5,0,0.5]));
-    // colors = colors.concat(generateCircleColor(10, [0,0,1]));
-    // colors = colors.concat(generateCircleColor(10, [1,0,0]));
-
+    // let colors = generateCircleColor(side, [0.25,0.25,0.75]);
+    let colors = generateHollowCircleColor(side, [1,0,1]);
     // membuat buffer-buffer yang akan digunakan
     let vertexBuffer = createArrFloatBuffer(gl, vertices);
     let colorBuffer = createArrFloatBuffer(gl, colors);
@@ -79,7 +76,7 @@ function main(){
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LEQUAL);
 
-        gl.clearColor(1, 1, 1, 1.0);
+        gl.clearColor(0.1, 0.1, 0.1, 1.0);
         gl.clearDepth(1.0);
 
         gl.viewport(0.0, 0.0, canvas.width, canvas.height);
