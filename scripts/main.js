@@ -1,43 +1,28 @@
 function main(){
+    // prerequisite
     let canvas = document.getElementById("myCanvas");
     let gl = canvas.getContext("webgl");
     let mat4 = glMatrix.mat4;
 
-    let side = 72;
-    let radiusI = 1.1;
-    let radiusO = 1.2;
-    let height = 0.1;
-    let baseH = 1.5;
-    // let mesh = generateTubeLike(side, height, [radius, radius+0.1], [0.0, 0.0, 0.0], 0);
-    // let mesh = generateHollowCircle(side, [radius,1.5*radius], [0.0, 0.0, 0.0], 0);
-    // let mesh2 = generateTubeLike(10, 1, 0.25, [0.0, 1.0, 0.0], mesh[2]);
-    let topKaleng = generateHollowTube(side, height, [radiusI, radiusO], [0.0,0.0+baseH,0.0], 0);
-    let bridge = generateTubeLike(side, 0.4, [radiusO, radiusO+0.15], [0.0, -height+baseH, 0.0], topKaleng[2]);
-    let bodyindices = generateTubeLikeBodyIndices(side, bridge[2]-side-1);
-    let bottom = generateCircle(side, radiusO+0.15, [0.0, -height-0.4-3.6+baseH, 0.0], bridge[2]);
-    // alert(topKaleng[2]);
-    let vertices = topKaleng[0];
-    let indices = topKaleng[1];
-    vertices = vertices.concat(bridge[0], bottom[0]);
-    indices = indices.concat(bridge[1], bodyindices, bottom[1]);
+    // define object
+    let topRing     = generateHollowTube(SIDE, HEIGHT_TOP_RING, [R_TOP_RING, R_OUTER_TOP_RING], [CX,CY,CZ], 0);
+    let bridge      = generateTubeLike(SIDE, HEIGHT_BRIDGE, [R_OUTER_TOP_RING, R_OUTER_BRIDGE], [CX, CY_BRIDGE, CZ], topRing[2]);
+    let bodyindices = generateTubeLikeBodyIndices(SIDE, bridge[2]-SIDE-1);
+    let bottomBody  = generateCircle(SIDE, R_OUTER_BRIDGE, [CX, CY_BOTTOM_BODY, CZ], bridge[2]);
+    
+    // combine vertices & indices
+    let vertices = topRing[0];
+    let indices = topRing[1];
+    vertices = vertices.concat(bridge[0], bottomBody[0]);
+    indices = indices.concat(bridge[1], bodyindices, bottomBody[1]);
 
-    // let indices = generateTubeLikeBodyIndices(side, 0);
-    // console.log(vertices);
-    // console.log(indices);
-    // vertices = vertices.concat(mesh2[0]);
-    // indices = indices.concat(mesh2[1]);
-    // console.log(vertices);
-    // console.log(mesh2[0].length)
-    // debug(indices.length);
-    // getTriangleProperty([0,0],[3,4]);
-    // let colortop = generateCircleColor(side, [0.25,0.25,0.75]);
-    let colorbottom = generateHollowCircleColor(side, [1,0,1]);
-    let colortop = generateHollowCircleColor(side, [1,1,0]);
-    let colorTubeTop = generateCircleColor(side, [0,0.5,0.5]);
-    let colorTubeBottom = generateCircleColor(side, [0.2,0.2,0.75]);
-    let colorCir = generateCircleColor(side, [1,1,1]);
+    let colorbottomBody = generateHollowCircleColor(SIDE, [0.25,0.25,0.25]);
+    let colortop = generateHollowCircleColor(SIDE, [0.5,0.5,0.5]);
+    let colorTubeTop = generateCircleColor(SIDE, [0.4,0.4,0.4]);
+    let colorTubebottomBody = generateCircleColor(SIDE, [0.85,0.85,0.85]);
+    let colorCir = generateCircleColor(SIDE, [0.85,0.85,0.85]);
     let colors = [];
-    colors = colors.concat(colortop, colorbottom, colorTubeTop, colorTubeBottom, colorCir);
+    colors = colors.concat(colortop, colorbottomBody, colorTubeTop, colorTubebottomBody, colorCir);
     // let colors = generateHollowCircleColor(side, [1,0,1]);
     
     // membuat buffer-buffer yang akan digunakan
