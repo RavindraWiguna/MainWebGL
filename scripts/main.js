@@ -95,7 +95,7 @@ function main(){
     let modmatrix = new Float32Array(16);
     let viewmatrix = new Float32Array(16);
 
-    let camx = 3.0,camy=2.0,camz=8.0;
+    let camx = 3.0,camy=4.0,camz=8.0;
     // matrix that store where the 'camera' is, at what coordinate it looking, and which way is up
     mat4.lookAt(viewmatrix, [camx, camy, camz], [0,0,0], [0,1,0]);
     // matrix that store the perspective projection from the camera
@@ -103,12 +103,11 @@ function main(){
     // matrix that store world transformation
     mat4.identity(modmatrix);
 
-
     let theta = glMatrix.glMatrix.toRadian(0.5);    
     let animate = function(){
-        mat4.rotateX(modmatrix, modmatrix, theta);
-        // mat4.rotateY(modmatrix, modmatrix, 1*theta);
-        mat4.rotateZ(modmatrix, modmatrix, theta);
+        // mat4.rotateX(modmatrix, modmatrix, theta);
+        mat4.rotateY(modmatrix, modmatrix, 1*theta);
+        // mat4.rotateZ(modmatrix, modmatrix, theta);
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LEQUAL);
 
