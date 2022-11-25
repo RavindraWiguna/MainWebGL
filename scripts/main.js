@@ -3,24 +3,24 @@ function main(){
     let gl = canvas.getContext("webgl");
     let mat4 = glMatrix.mat4;
 
-    let side = 10;
+    let side = 36;
     let radius = 1;
-    let height = 2;
-    let mesh = generateTube(side, height, radius, [0.0, 0.0, 0.0], 0);
-    let mesh2 = generateTube(10, 1, 0.25, [0.0, 1.0, 0.0], mesh[2]);
+    let height = 0.25;
+    let mesh = generateTubeLike(side, height, [radius, radius+0.1], [0.0, 0.0, 0.0], 0);
+    // let mesh2 = generateTubeLike(10, 1, 0.25, [0.0, 1.0, 0.0], mesh[2]);
     let vertices = mesh[0];
     let indices = mesh[1];
     console.log(vertices.length);
-    vertices = vertices.concat(mesh2[0]);
-    indices = indices.concat(mesh2[1]);
+    // vertices = vertices.concat(mesh2[0]);
+    // indices = indices.concat(mesh2[1]);
     console.log(vertices);
-    console.log(mesh2[0].length)
+    // console.log(mesh2[0].length)
     debug(indices.length);
-
-    let colors = generateCircleColor(side, [1,1,0]);
-    colors = colors.concat(generateCircleColor(side, [1,0,1]));
-    colors = colors.concat(generateCircleColor(10, [0,0,1]));
-    colors = colors.concat(generateCircleColor(10, [1,0,0]));
+    // getTriangleProperty([0,0],[3,4]);
+    let colors = generateCircleColor(side, [0.25,0.25,0.75]);
+    colors = colors.concat(generateCircleColor(side, [0.5,0,0.5]));
+    // colors = colors.concat(generateCircleColor(10, [0,0,1]));
+    // colors = colors.concat(generateCircleColor(10, [1,0,0]));
 
     // membuat buffer-buffer yang akan digunakan
     let vertexBuffer = createArrFloatBuffer(gl, vertices);
@@ -60,7 +60,7 @@ function main(){
     let modmatrix = new Float32Array(16);
     let viewmatrix = new Float32Array(16);
 
-    let camx = 0.0,camy=5,camz=5.0;
+    let camx = 2.0,camy=3.0,camz=5.0;
     // matrix that store where the 'camera' is, at what coordinate it looking, and which way is up
     mat4.lookAt(viewmatrix, [camx, camy, camz], [0,0,0], [0,1,0]);
     // matrix that store the perspective projection from the camera
@@ -69,15 +69,15 @@ function main(){
     mat4.identity(modmatrix);
 
 
-    let theta = glMatrix.glMatrix.toRadian(0.2);    
+    let theta = glMatrix.glMatrix.toRadian(0.5);    
     let animate = function(){
-        mat4.rotateX(modmatrix, modmatrix, theta);
-        // mat4.rotateY(modmatrix, modmatrix, theta);
-        // mat4.rotateZ(modmatrix, modmatrix, 2*theta);
+        // mat4.rotateX(modmatrix, modmatrix, theta);
+        mat4.rotateY(modmatrix, modmatrix, theta);
+        // mat4.rotateZ(modmatrix, modmatrix, theta);
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LEQUAL);
 
-        gl.clearColor(1.0, 1.0, 1.0, 1.0);
+        gl.clearColor(0.1, 0.1, 0.1, 1.0);
         gl.clearDepth(1.0);
 
         gl.viewport(0.0, 0.0, canvas.width, canvas.height);
