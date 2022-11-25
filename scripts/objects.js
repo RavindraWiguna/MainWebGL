@@ -134,7 +134,46 @@ function generateHollowCircleColor(side, color){
     }
     return generateUniformColor(side*3, color);
 }
-// function generateHollowTube(side, height, radius, )
+function generateHollowTube(side, height, radius, center, offset){
+    let vertices = [];
+    let indices = [];
+
+    let geometryTop = generateHollowCircle(side, radius, center, offset);
+    let geometryBottom = generateHollowCircle(side, radius, [center[0], center[1]-height, center[2]], geometryTop[OFFSET]);
+
+    // combine vertex
+    vertices = vertices.concat(geometryTop[VERTEX], geometryBottom[VERTEX]);
+    // offset of the body's indices is the same with the top geometry
+    let hollowBodiesIndices = generateHollowTubeBodyIndices(side, offset, false);
+    // merge indices
+    indices = indices.concat(geometryTop[INDICES], geometryBottom[INDICES], hollowBodiesIndices);
+    // read tubelike for memory recall of why this line exist
+    let newOffset = geometryBottom[OFFSET];
+    return [vertices, indices, newOffset];
+}
+
+function generateHollowTubeBodyIndices(side, offset, isOuter){
+    let indices = [];
+
+    // inner/general body
+    let start = 0;
+    for(let i = 0;i<side-1;i++){
+        start = i*3;
+        indices.push(start+offset, start+3*side+offset, start+3*side+3+offset);
+        indices.push(start+offset, start+3+offset, start+3*side+3+offset);
+    }
+    start = (side-1)*3;
+    // agak ribet kalo mau 1 line, jadi tak pisah aja side terakhir
+    indices.push(start+offset, start+3*side+offset, side*3+offset);
+    indices.push(start+offset, 0+offset, side*3+offset);
+    if(isOuter){
+        return indices;
+    }
+    // the outer body is just indices of inner +1 (did somemath)
+    let outerBody = generateHollowTubeBodyIndices(side, offset+1, true);
+    indices = indices.concat(outerBody);
+    return indices;
+}
 
 function generateTubeLike(side, height, radius, center, offset){
     let rtop = radius[0], rbottom=radius[1];
@@ -152,6 +191,9 @@ function generateTubeLike(side, height, radius, center, offset){
     let tubeIndices = generateTubeLikeBodyIndices(side, offset);
     // merge indices
     indices = indices.concat(geometryTop[INDICES], geometryBottom[INDICES], tubeIndices);
+    
+    // newoffset is just the new offset from bottom geometry because the body didnt add any new vertex, 
+    // it reuse vertex, so max body indices == max bottom indices --> jaga - jaga future me lupa
     let newOffset = geometryBottom[OFFSET];
     return [vertices, indices, newOffset];
 }
@@ -164,6 +206,6 @@ function generateTubeLikeBodyIndices(side, offset){
     }
     // agak ribet kalo mau 1 line, jadi tak pisah aja side terakhir
     indices.push(side+offset, side+side+1+offset, (side+side+1)%side+side+1+offset);
-    indices.push(side+offset, 1+offset, (side+side+1)%side+side+1+offset);
+    indices.push(side+offset, 1+offset, (side+side+1)%side+side+1+offset);              // am sure ini bisa di simplify, but nah later (sama kaya hollow si)
     return indices;
 }
