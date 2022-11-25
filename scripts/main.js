@@ -1,28 +1,51 @@
 function main(){
     // prerequisite
-    let canvas = document.getElementById("myCanvas");
-    let gl = canvas.getContext("webgl");
-    let mat4 = glMatrix.mat4;
+    let canvas  = document.getElementById("myCanvas");
+    let gl      = canvas.getContext("webgl");
+    let mat4    = glMatrix.mat4;
 
     // define object
-    let topRing     = generateHollowTube(SIDE, HEIGHT_TOP_RING, [R_TOP_RING, R_OUTER_TOP_RING], [CX,CY,CZ], 0);
+    let canOpener1  = generateHollowTube(SIDE_CANOP, HEIGHT_CANOP, [R_CANOP, R_OUTER_CANOP], [CX_CANOP, CY, CZ_CANOP], 0);
+    let canOpener2  = generateHollowTube(SIDE_CANOP, HEIGHT_CANOP, [R_CANOP, R_OUTER_CANOP], [-CX_CANOP, CY, -CZ_CANOP], canOpener1[OFFSET]);
+    let topRing     = generateHollowTube(SIDE, HEIGHT_TOP_RING, [R_TOP_RING, R_OUTER_TOP_RING], [CX,CY,CZ], canOpener2[OFFSET]);
     let bridge      = generateTubeLike(SIDE, HEIGHT_BRIDGE, [R_OUTER_TOP_RING, R_OUTER_BRIDGE], [CX, CY_BRIDGE, CZ], topRing[2]);
     let bodyindices = generateTubeLikeBodyIndices(SIDE, bridge[2]-SIDE-1);
     let bottomBody  = generateCircle(SIDE, R_OUTER_BRIDGE, [CX, CY_BOTTOM_BODY, CZ], bridge[2]);
     
+    // define its color
+    let colorCanop1     = generateHollowTubeColor(SIDE_CANOP, COLOR_CANOP, COLOR_CANOP);
+    let colorCanop2     = generateHollowTubeColor(SIDE_CANOP, COLOR_CANOP, COLOR_CANOP);
+    let colorTopRing    = generateHollowTubeColor(SIDE, COLOR_TOP_RING, COLOR_TOP_RING);
+    let colorBridge     = generateTubeLikeColor(SIDE, COLOR_BRIDGE_1, COLOR_BRIDGE_2);
+    let colorBottomBody = generateCircleColor(SIDE, COLOR_BRIDGE_2);
     // combine vertices & indices
-    let vertices = topRing[0];
-    let indices = topRing[1];
-    vertices = vertices.concat(bridge[0], bottomBody[0]);
-    indices = indices.concat(bridge[1], bodyindices, bottomBody[1]);
-
-    let colorbottomBody = generateHollowCircleColor(SIDE, [0.25,0.25,0.25]);
-    let colortop = generateHollowCircleColor(SIDE, [0.5,0.5,0.5]);
-    let colorTubeTop = generateCircleColor(SIDE, [0.4,0.4,0.4]);
-    let colorTubebottomBody = generateCircleColor(SIDE, [0.85,0.85,0.85]);
-    let colorCir = generateCircleColor(SIDE, [0.85,0.85,0.85]);
+    let vertices = [];
+    let indices = [];
     let colors = [];
-    colors = colors.concat(colortop, colorbottomBody, colorTubeTop, colorTubebottomBody, colorCir);
+    vertices =  vertices.concat(
+                canOpener1[0],
+                canOpener2[0],
+                topRing[0], 
+                bridge[0], 
+                bottomBody[0]
+                );
+    indices  =  indices.concat(
+                canOpener1[1],
+                canOpener2[1],
+                topRing[1], 
+                bridge[1], 
+                bodyindices, 
+                bottomBody[1]
+                );
+
+    
+    colors  =   colors.concat(
+                colorCanop1, 
+                colorCanop2, 
+                colorTopRing, 
+                colorBridge, 
+                colorBottomBody, 
+                );
     // let colors = generateHollowCircleColor(side, [1,0,1]);
     
     // membuat buffer-buffer yang akan digunakan
@@ -63,7 +86,7 @@ function main(){
     let modmatrix = new Float32Array(16);
     let viewmatrix = new Float32Array(16);
 
-    let camx = 3.0,camy=4.0,camz=10.0;
+    let camx = 3.0,camy=5.0,camz=7.0;
     // matrix that store where the 'camera' is, at what coordinate it looking, and which way is up
     mat4.lookAt(viewmatrix, [camx, camy, camz], [0,0,0], [0,1,0]);
     // matrix that store the perspective projection from the camera
@@ -72,10 +95,10 @@ function main(){
     mat4.identity(modmatrix);
 
 
-    let theta = glMatrix.glMatrix.toRadian(0.1);    
+    let theta = glMatrix.glMatrix.toRadian(0.5);    
     let animate = function(){
         // mat4.rotateX(modmatrix, modmatrix, 3*theta);
-        mat4.rotateY(modmatrix, modmatrix, 1*theta);
+        // mat4.rotateY(modmatrix, modmatrix, 1*theta);
         // mat4.rotateZ(modmatrix, modmatrix, 5*theta);
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LEQUAL);
