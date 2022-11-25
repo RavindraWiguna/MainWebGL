@@ -30,7 +30,7 @@ function createShader(gl, srcId, type){
     return shader;
 }
 
-function debug(text){
+function showdebug(text){
     let debug = document.getElementById("d");
     debug.textContent=text;
 }
