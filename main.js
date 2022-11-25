@@ -61,9 +61,13 @@ function main(){
     let viewmatrix = new Float32Array(16);
 
     let camx = 0.0,camy=5,camz=5.0;
+    // matrix that store where the 'camera' is, at what coordinate it looking, and which way is up
     mat4.lookAt(viewmatrix, [camx, camy, camz], [0,0,0], [0,1,0]);
-    mat4.identity(modmatrix);
+    // matrix that store the perspective projection from the camera
     mat4.perspective(projmatrix, toRadian(45), canvas.width/canvas.height, 0.1, 1000);
+    // matrix that store world transformation
+    mat4.identity(modmatrix);
+
 
     let theta = glMatrix.glMatrix.toRadian(0.2);    
     let animate = function(){
