@@ -2,8 +2,9 @@
 const CX = 0.0;
 const CY = 1.5;
 const CZ = 0.0;
-// Top ring parameters
+// general parameter
 const SIDE = 72;
+// Top ring parameters
 const HEIGHT_TOP_RING = 0.1
 const R_TOP_RING = 1;
 const WIDTH_TOP_RING = 0.1;
