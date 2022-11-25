@@ -5,6 +5,17 @@ const VERTEX = 0;
 const INDICES = 1;
 const OFFSET = 2;
 
+function generateUniformColor(total, color){
+    let r = color[0];
+    let g = color[1];
+    let b = color[2];
+    let colors = [];
+    for(let i = 0;i<total;i++){
+        colors.push(r, g, b);
+    }
+    return colors;
+}
+
 // Generate vertices and indices of an approximate-circle
 // return vertex, indice, offset
 function generateCircle(side, radius, center, offset){
@@ -13,17 +24,17 @@ function generateCircle(side, radius, center, offset){
     let newOffset = offset+side+1;
     return [vertices, indices, newOffset];
 }
+
 // Generate vertices of a circle by approximating it into N-side polygon
 function generateCircleVertices(side, radius, center){
-    let cx = center[0];
-    let cy = center[1];
-    let cz = center[2];
-
     if(side < 3){
         alert("side can not be < 3");
         return; 
     }
 
+    let cx = center[0];
+    let cy = center[1];
+    let cz = center[2];
     let increment = 2*Math.PI/side;
     let vertices = [cx, cy, cz];
     for(let i=0;i<side;i++){
@@ -34,22 +45,7 @@ function generateCircleVertices(side, radius, center){
     }
     return vertices;
 }
-// Generate array of rgb color for each vertices of a circle
-function generateCircleColor(side, color){
-    if(side < 3){
-        alert("side can not be < 3");
-        return; 
-    }
 
-    let r = color[0];
-    let g = color[1];
-    let b = color[2];
-    let colors = [r,g,b]
-    for(let i = 0;i<side;i++){
-        colors.push(r, g, b);
-    }
-    return colors;
-}
 // Generate Indices of a circle (N-polygon)
 function generateCircleIndices(side, offset){
     if(side < 3){
@@ -62,6 +58,16 @@ function generateCircleIndices(side, offset){
     }
     return indices;
 }
+
+// Generate array of rgb color for each vertices of a circle
+function generateCircleColor(side, color){
+    if(side < 3){
+        alert("side can not be < 3");
+        return; 
+    }
+    return generateUniformColor(side+1, color);
+}
+
 // Generate vertices and indices of a hollow circle
 function generateHollowCircle(side, radius, center, offset){
     let vertices = generateHollowCircleVertices(side, radius, center);
@@ -69,6 +75,7 @@ function generateHollowCircle(side, radius, center, offset){
     let newOffset = offset+3*side;
     return [vertices, indices, newOffset];
 }
+
 // Generate vertices of a hollow circle by using trapezoid in between 2 circle
 function generateHollowCircleVertices(side, radius, center){
     if(side < 3){
@@ -99,11 +106,9 @@ function generateHollowCircleVertices(side, radius, center){
     }
     return vertices;
 }
+
 // Generate indices of a hollow circle
 function generateHollowCircleIndices(side, offset){
-    console.log('got');
-    console.log(side);
-    console.log(offset);
     if(side < 3){
         alert("side can not be < 3");
         return; 
@@ -120,11 +125,15 @@ function generateHollowCircleIndices(side, offset){
     indices.push(start+offset, start+1+offset, start+2+offset);
     indices.push(start+offset, start+2+offset, 0+offset);
     indices.push(start+2+offset, 0+offset, 1+offset);
-    console.log("done");
-    console.log(indices);
     return indices;
 }
-
+function generateHollowCircleColor(side, color){
+    if(side < 3){
+        alert("side can not be < 3");
+        return; 
+    }
+    return generateUniformColor(side*3, color);
+}
 // function generateHollowTube(side, height, radius, )
 
 function generateTubeLike(side, height, radius, center, offset){
