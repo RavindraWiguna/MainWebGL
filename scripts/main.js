@@ -11,13 +11,17 @@ function main(){
     let bridge      = generateTubeLike(SIDE, HEIGHT_BRIDGE, [R_OUTER_TOP_RING, R_OUTER_BRIDGE], [CX, CY_BRIDGE, CZ], topRing[2]);
     let bodyindices = generateTubeLikeBodyIndices(SIDE, bridge[2]-SIDE-1);
     let bottomBody  = generateCircle(SIDE, R_OUTER_BRIDGE, [CX, CY_BOTTOM_BODY, CZ], bridge[2]);
-    
+    let bridge2     = generateTubeLike(SIDE, HEIGHT_BRIDGE_2/2, [R_OUTER_BRIDGE, R_OUTER_BRIDGE-0.05], [CX, CY_BOTTOM_BODY, CZ], bottomBody[OFFSET]);
+    let bottomRing  = generateHollowTube(SIDE, HEIGHT_TOP_RING, [R_OUTER_BRIDGE-0.1, R_OUTER_BRIDGE], [CX,CY_BOTTOM_RING+HEIGHT_BRIDGE_2/2,CZ], bridge2[OFFSET]);
+
     // define its color
     let colorCanop1     = generateHollowTubeColor(SIDE_CANOP, COLOR_CANOP, COLOR_CANOP);
     let colorCanop2     = generateHollowTubeColor(SIDE_CANOP, COLOR_CANOP, COLOR_CANOP);
-    let colorTopRing    = generateHollowTubeColor(SIDE, COLOR_TOP_RING, COLOR_TOP_RING);
+    let colorRing       = generateHollowTubeColor(SIDE, COLOR_TOP_RING, COLOR_TOP_RING);
     let colorBridge     = generateTubeLikeColor(SIDE, COLOR_BRIDGE_1, COLOR_BRIDGE_2);
     let colorBottomBody = generateCircleColor(SIDE, COLOR_BRIDGE_2);
+    let colorBridge2    = generateTubeLikeColor(SIDE, COLOR_BRIDGE_2, COLOR_BRIDGE_1);
+
     // combine vertices & indices
     let vertices = [];
     let indices = [];
@@ -27,7 +31,9 @@ function main(){
                 canOpener2[0],
                 topRing[0], 
                 bridge[0], 
-                bottomBody[0]
+                bottomBody[0],
+                bridge2[0],
+                bottomRing[0],
                 );
     indices  =  indices.concat(
                 canOpener1[1],
@@ -35,18 +41,21 @@ function main(){
                 topRing[1], 
                 bridge[1], 
                 bodyindices, 
-                bottomBody[1]
+                bottomBody[1],
+                bridge2[1],
+                bottomRing[1],
                 );
 
     
     colors  =   colors.concat(
                 colorCanop1, 
                 colorCanop2, 
-                colorTopRing, 
+                colorRing, 
                 colorBridge, 
-                colorBottomBody, 
+                colorBottomBody,
+                colorBridge2,
+                colorRing,
                 );
-    // let colors = generateHollowCircleColor(side, [1,0,1]);
     
     // membuat buffer-buffer yang akan digunakan
     let vertexBuffer = createArrFloatBuffer(gl, vertices);
@@ -86,7 +95,7 @@ function main(){
     let modmatrix = new Float32Array(16);
     let viewmatrix = new Float32Array(16);
 
-    let camx = 3.0,camy=5.0,camz=7.0;
+    let camx = 3.0,camy=2.0,camz=8.0;
     // matrix that store where the 'camera' is, at what coordinate it looking, and which way is up
     mat4.lookAt(viewmatrix, [camx, camy, camz], [0,0,0], [0,1,0]);
     // matrix that store the perspective projection from the camera
@@ -97,9 +106,9 @@ function main(){
 
     let theta = glMatrix.glMatrix.toRadian(0.5);    
     let animate = function(){
-        // mat4.rotateX(modmatrix, modmatrix, 3*theta);
+        mat4.rotateX(modmatrix, modmatrix, theta);
         // mat4.rotateY(modmatrix, modmatrix, 1*theta);
-        // mat4.rotateZ(modmatrix, modmatrix, 5*theta);
+        mat4.rotateZ(modmatrix, modmatrix, theta);
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LEQUAL);
 
