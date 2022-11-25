@@ -152,6 +152,12 @@ function generateHollowTube(side, height, radius, center, offset){
     return [vertices, indices, newOffset];
 }
 
+function generateHollowTubeColor(side, colorTop, colorBottom){
+    let colors = generateHollowCircleColor(side, colorTop);
+    colors = colors.concat(generateHollowCircleColor(side, colorBottom));
+    return colors;
+}
+
 function generateHollowTubeBodyIndices(side, offset, isOuter){
     let indices = [];
 
@@ -196,6 +202,12 @@ function generateTubeLike(side, height, radius, center, offset){
     // it reuse vertex, so max body indices == max bottom indices --> jaga - jaga future me lupa
     let newOffset = geometryBottom[OFFSET];
     return [vertices, indices, newOffset];
+}
+
+function generateTubeLikeColor(side, colorTop, colorBottom){
+    let colors = generateCircleColor(side, colorTop);
+    colors = colors.concat(generateCircleColor(side, colorBottom));
+    return colors;
 }
 
 function generateTubeLikeBodyIndices(side, offset){
