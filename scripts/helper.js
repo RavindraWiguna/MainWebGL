@@ -1,3 +1,6 @@
+/*
+=========================== WEBGL HELPER ========================
+*/
 function createArrFloatBuffer(gl, data){
     let newBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, newBuffer);
@@ -30,19 +33,32 @@ function createShader(gl, srcId, type){
     return shader;
 }
 
-function showdebug(text){
-    let debug = document.getElementById("d");
-    debug.textContent=text;
+/*
+===================== ANIMATION CONTROL HELPER ====================
+*/
+
+function reColorSlider(){
+    let value = (this.value-this.min)/(this.max-this.min)*100
+    this.style.background = 'linear-gradient(to right, #7c17f0 0%, #2e16de ' + value + '%, #fff ' + value + '%, white 100%)'
 }
 
-function handleRotation(worldMatrix, angles){
+function getSliderValue(id){
+    let slider = document.getElementById(id);
+    return slider.value;
+}
+
+document.getElementById("vX").oninput = reColorSlider;
+document.getElementById("vY").oninput = reColorSlider;
+document.getElementById("vZ").oninput = reColorSlider;
+
+function handleRotation(worldMatrix){
     let checkX = document.getElementById("RotateX");
     let checkY = document.getElementById("RotateY");
     let checkZ = document.getElementById("RotateZ");
 
-    let angX = angles[0];
-    let angY = angles[1];
-    let angZ = angles[2];
+    let angX = toRadian(getSliderValue("vX")/4);
+    let angY = toRadian(getSliderValue("vY")/4);
+    let angZ = toRadian(getSliderValue("vZ")/4);
 
     if(checkX.checked){
         glMatrix.mat4.rotateX(worldMatrix, worldMatrix, angX);
