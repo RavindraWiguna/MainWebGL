@@ -103,10 +103,9 @@ function main(){
     // matrix that store world transformation
     mat4.identity(modmatrix);
 
-    let theta = glMatrix.glMatrix.toRadian(0.5);    
     let animate = function(){
 
-        handleRotation(modmatrix, [theta, theta, theta]);
+        handleRotation(modmatrix);
 
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LEQUAL);
