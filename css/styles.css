@@ -8,21 +8,32 @@ body{
     flex-wrap: wrap;
 }
 
-#controls{
+#rotationCtrl{
     margin-left: 20px;
-    border: solid 2px rgb(212, 205, 205);
+    border: solid 2px rgb(14, 14, 14);
     height: fit-content;
     padding: 10px;
     margin-top: 5px;
+    background-color: rgb(22, 22, 22);
+    color: rgb(243, 243, 243);
 }
 
-#controls p{
+#rotationCtrl:hover{
+    box-shadow: 0px 0px 6px 1px rgb(29, 3, 174);
+}
+
+#rotationCtrl p{
     margin-top: 0;
     font: 14px/20px "Open Sans", Arial, sans-serif;
     font-weight: 500;
 }
 
 /* checkbox-rect */
+.checkbox-rect{
+    margin-bottom: 0px;
+    margin-top:15px;
+}
+
 .checkbox-rect input[type="checkbox"] {
 display: none;
 }
@@ -30,7 +41,7 @@ display: none;
 display: block;
 position: relative;
 padding-left: 35px;
-margin-bottom: 5px;
+margin-bottom: 0px;
 font: 14px/20px "Open Sans", Arial, sans-serif;
 cursor: pointer;
 /* color :#e8e8e8; */
@@ -61,6 +72,17 @@ border-radius: 0.2em;
 border: 2px solid #fff;
 -webkit-transform: rotate(90deg);
 transform: rotate(90deg);
-background: #50565a;
+background: #2e16de;
 box-shadow: 0 0 0 1px #000;
+}
+
+#rotationCtrl input[type="range"] {
+    width: 180px;
+    background: linear-gradient(to right, #7c17f0 0%, #2e16de 50%, #fff 50%, #fff 100%);
+    border-radius: 8px;
+    height: 7px;
+    outline: none;
+    transition: background 450ms ease-in;
+    -webkit-appearance: none;
+    cursor: pointer;
 }
