@@ -22,7 +22,7 @@ function main(){
     let colorBottomBody = generateCircleColor(SIDE, COLOR_BRIDGE_2);
     let colorBridge2    = generateTubeLikeColor(SIDE, COLOR_BRIDGE_2, COLOR_BRIDGE_1);
 
-    // combine vertices & indices
+    // combine vertices & indices & colors
     let vertices = [];
     let indices = [];
     let colors = [];
@@ -44,9 +44,7 @@ function main(){
                 bottomBody[1],
                 bridge2[1],
                 bottomRing[1],
-                );
-
-    
+                );    
     colors  =   colors.concat(
                 colorCanop1, 
                 colorCanop2, 
