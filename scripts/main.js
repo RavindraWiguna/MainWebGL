@@ -105,9 +105,9 @@ function main(){
 
     let theta = glMatrix.glMatrix.toRadian(0.5);    
     let animate = function(){
-        // mat4.rotateX(modmatrix, modmatrix, theta);
-        mat4.rotateY(modmatrix, modmatrix, 1*theta);
-        // mat4.rotateZ(modmatrix, modmatrix, theta);
+
+        handleRotation(modmatrix, [theta, theta, theta]);
+
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LEQUAL);
 
