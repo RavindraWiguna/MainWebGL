@@ -106,6 +106,7 @@ function main(){
     let animate = function(){
 
         handleRotation(modmatrix);
+        handleInputRotation(modmatrix);
 
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LEQUAL);

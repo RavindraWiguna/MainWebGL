@@ -70,6 +70,45 @@ function handleRotation(worldMatrix){
         glMatrix.mat4.rotateZ(worldMatrix, worldMatrix, angZ);
     }
 }
+let keyboard = {};
+function keyUp(event) {
+    keyboard[event.keyCode] = false;
+}
+  
+function keyDown(event) {
+    keyboard[event.keyCode] = true;
+}
+
+window.addEventListener("keydown", keyDown);
+window.addEventListener("keyup", keyUp);
+
+function handleInputRotation(worldMatrix){
+    const SPEED = 0.32;
+    if(keyboard[87]){
+        // w, rotate x
+        glMatrix.mat4.rotateX(worldMatrix, worldMatrix, toRadian(-SPEED));
+    }
+    if(keyboard[83]){
+        // s
+        glMatrix.mat4.rotateX(worldMatrix, worldMatrix, toRadian(SPEED));
+    }
+    if(keyboard[65]){
+        //a
+        glMatrix.mat4.rotateZ(worldMatrix, worldMatrix, toRadian(-SPEED));
+    }
+    if(keyboard[68]){
+        // d
+        glMatrix.mat4.rotateZ(worldMatrix, worldMatrix, toRadian(SPEED));
+    }
+    if(keyboard[74]){
+        // j
+        glMatrix.mat4.rotateY(worldMatrix, worldMatrix, toRadian(2*SPEED));
+    }
+    if(keyboard[75]){
+        // k
+        glMatrix.mat4.rotateY(worldMatrix, worldMatrix, toRadian(-2*SPEED));
+    }
+}
 
 /*
 =============================== MATH HELPER =======================
