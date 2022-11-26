@@ -10,8 +10,8 @@ const HEIGHT_CANOP = 0.05;
 const R_CANOP = 0.2;
 const WIDTH_CANOP = 0.1;
 const R_OUTER_CANOP = R_CANOP+WIDTH_CANOP;
-const CX_CANOP = CX-R_OUTER_CANOP/2;
-const CZ_CANOP = CZ-R_OUTER_CANOP/2;
+const CX_CANOP = CX-R_OUTER_CANOP/2-0.05;
+const CZ_CANOP = CZ-R_OUTER_CANOP/2+0.05;
 const COLOR_CANOP = [0.762, 0.755, 0.734];
 // Top ring parameters
 const HEIGHT_TOP_RING = 0.1
