@@ -35,6 +35,26 @@ function showdebug(text){
     debug.textContent=text;
 }
 
+function handleRotation(worldMatrix, angles){
+    let checkX = document.getElementById("RotateX");
+    let checkY = document.getElementById("RotateY");
+    let checkZ = document.getElementById("RotateZ");
+
+    let angX = angles[0];
+    let angY = angles[1];
+    let angZ = angles[2];
+
+    if(checkX.checked){
+        glMatrix.mat4.rotateX(worldMatrix, worldMatrix, angX);
+    }
+    if(checkY.checked){
+        glMatrix.mat4.rotateY(worldMatrix, worldMatrix, angY);
+    }
+    if(checkZ.checked){
+        glMatrix.mat4.rotateZ(worldMatrix, worldMatrix, angZ);
+    }
+}
+
 /*
 =============================== MATH HELPER =======================
 */
