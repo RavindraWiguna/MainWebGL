@@ -56,9 +56,9 @@ function main(){
                 );
     
     // membuat buffer-buffer yang akan digunakan
-    let vertexBuffer = createArrFloatBuffer(gl, vertices);
-    let colorBuffer = createArrFloatBuffer(gl, colors);
-    let indexBuffer = createElementArrUintBuffer(gl, indices);
+    let vertexBuffer = createArrBuffer(gl, gl.ARRAY_BUFFER, vertices, Float32Array, gl.STATIC_DRAW);
+    let colorBuffer = createArrBuffer(gl, gl.ARRAY_BUFFER, colors, Float32Array, gl.STATIC_DRAW);
+    let indexBuffer = createArrBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, indices, Uint16Array, gl.STATIC_DRAW);
 
     // membuat&compile vertex shader
     let vertexShader = createShader(gl, "vertexShaderCode", gl.VERTEX_SHADER);

@@ -1,24 +1,14 @@
 /*
 =========================== WEBGL HELPER ========================
 */
-function createArrFloatBuffer(gl, data){
+function createArrBuffer(gl, target, data, arrdtype, usage){
     let newBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, newBuffer);
+    gl.bindBuffer(target, newBuffer);
     // fill the buffer with passed data
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
+    gl.bufferData(target, new arrdtype(data), usage);
     // unbind the array buffer just in case
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    gl.bindBuffer(target, null);
     
-    return newBuffer;
-}
-
-function createElementArrUintBuffer(gl, data){
-    let newBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, newBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(data), gl.STATIC_DRAW);
-
-    // unbind the array buffer just in case
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     return newBuffer;
 }
 
