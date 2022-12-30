@@ -1,2 +1,4 @@
-# MainWebGL
-Repository nyimpen progress tugas webgl buat model3d
+# Bearbrand
+Nama: Putu Ravindra Wiguna<br>
+NRP : 5025201237<br>
+WebGL membuat benda 3D<br>
