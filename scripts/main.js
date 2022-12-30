@@ -3,6 +3,7 @@ function main(){
     let canvas  = document.getElementById("myCanvas");
     let gl      = canvas.getContext("webgl");
     let mat4    = glMatrix.mat4;
+    let vec3    = glMatrix.vec3;
 
     // define object
     let canOpener1  = generateHollowTube(SIDE_CANOP, HEIGHT_CANOP, [R_CANOP, R_OUTER_CANOP], [CX_CANOP, CY, CZ_CANOP], 0);
@@ -62,66 +63,56 @@ function main(){
 
     // membuat&compile vertex shader
     let vertexShader = createShader(gl, "vertexShaderCode", gl.VERTEX_SHADER);
+    
     // sama, tetapi fragment shader
     let fragmentShader = createShader(gl, "fragmentShaderCode", gl.FRAGMENT_SHADER);
 
     // membuat program gl dan menambahkan shader ke program tersebut
-    let program = gl.createProgram();  
-    gl.attachShader(program, vertexShader);   
-    gl.attachShader(program, fragmentShader);   
-    gl.linkProgram(program);
-    gl.useProgram(program);
+    let program = makeProgram(gl, vertexShader, fragmentShader);
 
-    //menambahkan vertices ke dalam aPosition dan aColor untuk digambar
-    //position
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    let aPosition = gl.getAttribLocation(program, "aPosition");
-    gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(aPosition);
+    // bind vertex buffer ke atribut aPosition
+    bindAttributeToBuffer(gl, program, "aPosition", vertexBuffer, 3, gl.FLOAT, false, 0, 0);
 
-    //color
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    let aColor = gl.getAttribLocation(program, "aColor");
-    gl.vertexAttribPointer(aColor, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(aColor);
+    // bind color buffer ke atribut aColor
+    bindAttributeToBuffer(gl, program, "aColor", colorBuffer, 3, gl.FLOAT, false, 0, 0);
     
-    let Pmatrix = gl.getUniformLocation(program, "uProj");
-    let Vmatrix = gl.getUniformLocation(program, "uView");
-    let Mmatrix = gl.getUniformLocation(program, "uModel");
-    
-    let projmatrix = new Float32Array(16);
-    let modmatrix = new Float32Array(16);
-    let viewmatrix = new Float32Array(16);
+    // camera setting for matrix
+    let camMatrix = createPVCameraMatrix(fov, canvas.width/canvas.height, near, far, camPos, target, up);
+    // world matrix
+    let modmatrix = mat4.create();
 
-    let camx = 3.0,camy=4.0,camz=8.0;
-    // matrix that store where the 'camera' is, at what coordinate it looking, and which way is up
-    mat4.lookAt(viewmatrix, [camx, camy, camz], [0,0,0], [0,1,0]);
-    // matrix that store the perspective projection from the camera
-    mat4.perspective(projmatrix, toRadian(45), canvas.width/canvas.height, 0.1, 1000);
-    // matrix that store world transformation
-    mat4.identity(modmatrix);
+    // bind camera matrix to uniform + world too
+    bindUniformToMatrix(gl, program, "uProj", camMatrix[0], false);
+    bindUniformToMatrix(gl, program, "uView", camMatrix[1], false);
+    bindUniformToMatrix(gl, program, "uModel", modmatrix, false);
+    
+    // light setting
+    let ambientLight = [1.0, 1.0, 1.0];
+    let intensity = [1.0, 1.0, 1.0];
+    let ambientVec = vec3.fromValues(ambientLight[0], ambientLight[1], ambientLight[2]);
+    let intensityVec = vec3.fromValues(intensity[0], intensity[1], intensity[2]);
+
+    bindUniformToVec3(gl, program, "uAmbientLight", ambientVec);
+    bindUniformToVec3(gl, program, "uIntensity", intensityVec);
 
     let animate = function(){
-
+        // handle user input
         handleRotation(modmatrix);
         handleInputRotation(modmatrix);
+        let ambient =  handleAmbientControl();
+        ambientVec = ambient[0];
+        intensityVec = ambient[1];
 
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LEQUAL);
+        prepareCanvas(gl, canvas);
 
-        gl.clearColor(0.1, 0.1, 0.1, 1.0);
-        gl.clearDepth(1.0);
-
-        gl.viewport(0.0, 0.0, canvas.width, canvas.height);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        gl.uniformMatrix4fv(Pmatrix, false, projmatrix);
-        gl.uniformMatrix4fv(Vmatrix, false, viewmatrix);
-        gl.uniformMatrix4fv(Mmatrix, false, modmatrix);
-
+        // update modmatrix kalau ada perubahan
+        bindUniformToMatrix(gl, program, "uModel", modmatrix, false);
+        // update ambient light kalau ada perubahan
+        bindUniformToVec3(gl, program, "uAmbientLight", ambientVec);
+        bindUniformToVec3(gl, program, "uIntensity", intensityVec);
+    
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
         gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, Uint16Array.BYTES_PER_ELEMENT*0);
-        // gl.drawElements(gl.TRIANGLES, indices.length/2, gl.UNSIGNED_SHORT, 72);
 
         window.requestAnimationFrame(animate);
     }    

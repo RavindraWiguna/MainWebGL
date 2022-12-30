@@ -33,3 +33,14 @@ const CY_BOTTOM_BODY = CY_BRIDGE-HEIGHT_BODY;
 const HEIGHT_BRIDGE_2 = HEIGHT_BRIDGE/2;
 // Bottom ring parameters
 const CY_BOTTOM_RING = CY_BOTTOM_BODY - HEIGHT_BRIDGE_2;
+
+// camera param
+let fov = toRadian(45);
+let near = 0.1;
+let far = 1000;
+let camx = 3.0,camy=4.0,camz=8.0;
+let camPos = [camx, camy, camz];
+let targetx = 0.0, targety = 0.0, targetz = 0.0;
+let target = [targetx, targety, targetz];
+let upx = 0.0, upy = 1.0, upz = 0.0;
+let up = [upx, upy, upz];
